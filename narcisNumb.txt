@@ -1,0 +1,12 @@
+--- var1 ---
+function narcissistic( value ) {
+  const valStr = value.toString();
+  return value === valStr.split('').reduce((acc, num) => (acc + num ** valStr.length), 0)
+}
+
+
+--- var2 ---
+function narcissistic( value ) {
+  return value === value.toString().split('').reduce((acc, num, i, arr) => (acc + num ** arr.length), 0)
+}
+

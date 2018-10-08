@@ -1,0 +1,28 @@
+--- var1 (wrong)---
+var fibonacciMy = function(n) {
+  let fib = [0, 1], fibN = 0;
+  while (fibN < n) fib[0]+=fib[1], fib[1]+=fib[0], fibN+=2;
+  return fib[0]
+}
+
+
+--- var2 ---
+var fibonacci = function(n) {
+  let arr = [0, 1], 
+      count = 0,
+      fibNum = (n==1 && 1) || 0;
+  while (count < n - 1 ) fibNum=arr[0]+arr[1], arr[0]=arr[1], arr[1]=fibNum, count+=1;
+  return fibNum
+}
+
+
+-- var3 ---
+var fibonacci = (() => {
+  let cache = [];
+  return (n) => {
+    if ( n == 0 || n == 1) return n;
+    if (cache[n-2] === undefined) cache[n-2] = fibonacci(n-2)
+    if (cache[n-1] === undefined) cache[n-1] = fibonacci(n-1)
+    return cache[n-1] + cache[n-2];
+  }
+})()

@@ -1,0 +1,17 @@
+--- var1 ---
+function solution(input, markers) {
+  let reg = markers.reduce((acc, marker, i, arr) => `${acc}\\${marker}.*${i===arr.length-1?'':'|'}`, '');
+  return input.replace(new RegExp(reg, 'g'), '').replace(/\s\n/g, '\n').trimRight();;
+};
+
+
+
+--- var2 ---
+function solution(input, markers) {
+  return (
+    input
+      .split('\n')
+      .map(line => markers.reduce((acc, marker) => acc.split(marker)[0].trimRight(), line))
+      .join('\n')
+  )
+};

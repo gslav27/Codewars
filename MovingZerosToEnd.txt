@@ -1,0 +1,12 @@
+--- var1 ---
+var moveZeros = function (arr) {
+  return [...arr.filter(val => val !== 0), ...arr.filter(val => val === 0)]
+}
+
+
+
+--- var2 ---
+var moveZeros = function (arr) {
+ let count = 0
+  return [...arr.filter(e => e === 0 ? count++ && false : true), ...Array(count).fill(0)]
+}

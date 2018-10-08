@@ -1,0 +1,58 @@
+--- var1 ---
+function generateBC(url, separator) {
+  const urlCleared = url.replace(/^(.*\:\/\/)|(\/?(\.(html|htm|php|asp))?([^\/\.\-\w\d].*)?)$/g,'');
+  const withIndexPage = /index$/.test(urlCleared);
+  changedUrl = urlCleared.split('/').reduce((acc, el, i, arr) => {
+    if (i === 0) return (arr.length === 1 || (arr.length === 2 && withIndexPage)) ? `<span class="active">HOME</span>` :`<a href="/">HOME</a>`
+
+    let text = el.toUpperCase();
+
+    if (el.length > 30) {
+      text = text
+        .split('-')
+        .filter(word => !["the","of","in","from","by","with","and", "or", "for", "to", "at", "a"].includes(word.toLowerCase()))
+        .reduce((acc, cur) => acc + cur[0],'');
+    } else if (text.includes('-')) {
+      text = text.replace(/\-/g, ' ');
+    }
+    
+    if (i === arr.length - 1) return `${acc}${withIndexPage ? '' : `${separator}<span class="active">${text}</span>`}`
+    if ((i === arr.length - 2) && withIndexPage) return `${acc+separator}<span class="active">${text}</span>`
+    
+    let href = '';
+    for (let j = 1; arr[j] && j <= i; ++j) {
+      href += arr[j] + '/'
+    }
+    return `${acc+separator}<a href="/${href}">${text}</a>`;
+    }, '')
+  return changedUrl;
+}
+
+
+--- var2 (CodeWars) ---
+function generateBC(url, separator) {
+  var arr = url.replace(/((\/index)?\.(html?|(ph|as)p))|(\?.+|#.+|https?:\/\/|\/$)/g, '').split('/'), link='';
+  return arr.map(function(v, i, a) {
+    if(a.length === 1) {
+      return '<span class="active">HOME</span>'
+    } else if(i === a.length -1) {
+      return '<span class="active">'+ acronymize(v) +'</span>';   
+    } else if(i===0) {
+      return '<a href="/">HOME</a>';      
+    } else {
+      link = link ? link + '/' + v : v; 
+      return '<a href="/'+ link +'/">'+ acronymize(v) +'</a>';
+    }
+  }).join(separator);
+}
+
+function acronymize(str) {
+  var removeList = ["the","of","in","from","by","with","and", "or", "for", "to", "at", "a"],
+      re = new RegExp("^(" + removeList.join('|') + ")$"), newStr = '';
+  if(str.length > 30) {
+    str.split('-').forEach(v => !re.test(v) ? newStr += v[0] : undefined);
+    return newStr.toUpperCase();
+  } else {
+    return str.replace(/-/g, ' ').toUpperCase();;
+  }
+}

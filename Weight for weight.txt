@@ -1,0 +1,146 @@
+--- var1 (wrong)---
+function orderWeight(string) {
+    if (!string) return string
+    let strWithSums = string.match(/\d+/g).map(num => {
+      let digSum = num.split('').reduce((acc, dig) => acc + Number(dig),0);
+      return [num, digSum];
+    });
+    strWithSums.sort((v1, v2) => v1[0] - v2[0]).sort((v1, v2) => v1[1] - v2[1]);
+//     strWithSums.sort((v1, v2) => v1[1] - v2[1]);
+    return strWithSums.map(val => val[0]).join(' ')
+}
+
+
+
+--- var2 (wrong) ---
+function orderWeight(string) {
+    if (!string) return string
+    let strWithSums = string.match(/\d+/g).map(num => {
+      let digSum = num.split('').reduce((acc, dig) => acc + Number(dig),0);
+      return [num, digSum];
+    });
+//     strWithSums.sort((v1, v2) => v1[0] - v2[0]).sort((v1, v2) => v1[1] - v2[1]);
+//     strWithSums.sort((v1, v2) => v1[1] - v2[1]);
+    let maxNumLength = Math.max(...strWithSums.map(val => val[0].length));
+    return strWithSums
+//       .sort((v1, v2) => {
+// //         if (v1[0].length === v2[0].length) return v1[0] - v2[0]
+//         let digNum = 0;
+//         while (v1[0][digNum] != v2[0][digNum]) {
+//           digNum++; 
+//           return v1[0].slice(0, )
+//         }
+// //         while () v1[0] - v2[0]
+//       })
+      .map(v => [...v, v[0].padEnd(maxNumLength, '0')])
+      .sort((v1, v2) => v1[2] - v2[2])
+      .sort((v1, v2) => v1[1] - v2[1])
+      .map(val => val[0]).join(' ');
+/*     return strWithSums.map(val => val[0]).join(' ') */
+}
+
+
+
+--- var3 ---
+function orderWeight_MY(string) { 
+  if (!string) return string
+	let uniqDigSums = {}; 
+  let strWithSums = string.match(/\d+/g)
+    .sort((num1, num2) => Number(num1) - Number(num2))
+    .map(num => {
+      let digSum = num
+      	.split('')
+      	.reduce((acc, dig) => acc + Number(dig),0);
+      	uniqDigSums[digSum] = [];
+        // uniqDigSums[digSum] = uniqDigSums[digSum].push([num, digSum, num.padEnd(maxNumLength, '0')]);
+        // uniqDigSums.indexOf().push
+        return [num, digSum];
+    }); 
+  let maxNumLength = Math.max(...strWithSums.map(val => val[0].length));
+  // console.log('uniqDigSums', uniqDigSums ); 
+
+  strWithSums.forEach(v => {
+    uniqDigSums[v[1]] = [...uniqDigSums[v[1]], [...v, v[0].padEnd(maxNumLength, '0')]]
+  });
+
+  let test = Object.values(uniqDigSums).map(gr => gr.sort((v1, v2) => v1[2] - v2[2]));
+  console.log('test', test);
+  let returnedTest = test.map(val => val.map(val => val[0]).join(' ')).join(' ');
+  console.log('returnedTest', returnedTest);
+  return returnedTest;
+  // let returnedStr = strWithSums
+  //   .map(v => [...v, v[0].padEnd(maxNumLength, '0')])
+  //   .sort((v1, v2) => v1[2] - v2[2])
+  //   .sort((v1, v2) => v1[1] - v2[1])
+  //   .map(val => val[0]).join(' ');
+
+  // console.log('groupNumSums_1', uniqDigSums ); 
+  // // console.log('groupNumSums', strWithSums.map(val => val[1]).join(' ').match(/\d+/g));
+  // // console.log('strWithSums.sort_1+', strWithSums.map(v => [...v, v[0].padEnd(maxNumLength, '0')]).sort((v1, v2) => v1[2] - v2[2])); 
+  // console.log('strWithSums.sort_2+', strWithSums.map(v => [...v, v[0].padEnd(maxNumLength, '0')]).sort((v1, v2) => v1[2] - v2[2]).sort((v1, v2) => v1[1] - v2[1])); 
+  // console.log(returnedStr);
+  // // return strWithSums.map(val => val[0]).join(' ')
+}
+
+// orderWeight_MY('247526 30 207570 4 229177 119 465965 31 213854 197 43806 21 440149 12 137 188924 2 14533 99 323207 6 15')
+orderWeight_MY('422630 148 461572 30 20777 53 433375 38 113032 180 54926 179 29061 113 120576 3 225225 178 330714 59 69');
+
+
+
+--- var4 ---
+function orderWeight(string) { 
+  if (!string) return string
+  
+  const uniqDigsSum = {}; 
+  const numsWithDigSum = (
+    string
+      .match(/\d+/g)
+      .sort((num1, num2) => Number(num1) - Number(num2))
+      .map(num => {
+        let digsSum = num.split('').reduce((acc, dig) => acc + Number(dig),0);
+        uniqDigsSum[digsSum] = [];
+        return [num, digsSum];
+      })
+  );    
+    
+  const maxNumLength = Math.max(...numsWithDigSum.map(arr => arr[0].length)); 
+
+  numsWithDigSum.forEach(([num,digSum]) => {
+    uniqDigsSum[digSum] = [...uniqDigsSum[digSum], [num, num.padEnd(maxNumLength, '0')]]
+  });
+
+  return Object.values(uniqDigsSum)
+    .map(numsGroup => numsGroup.sort((num1, num2) => num1[1] - num2[1]))
+    .map(numsGroup => numsGroup.map(([num]) => num).join(' '))
+    .join(' ');
+}
+
+
+--- CodeWars ---
+function orderWeight(strng) {
+ const sum = (str)=>str.split('').reduce((sum,el)=>(sum+(+el)),0);
+  function comp(a,b){
+    let sumA = sum(a);
+    let sumB = sum(b);
+    return sumA === sumB ? a.localeCompare(b) : sumA - sumB;
+   };
+ return strng.split(' ').sort(comp).join(' ');
+}
+
+
+
+--- var5 (final)---
+function orderWeight(strng) {
+  if (!strng) return strng
+  const digSum = (val) => val.split('').reduce((acc, cur) => acc+(+cur),0);
+  return (
+    strng
+      .match(/\d+/g)
+      .sort((a, b) => {
+        const sumA = digSum(a),
+              sumB = digSum(b);
+	      return (sumA === sumB) ? a.localeCompare(b) : sumA - sumB;
+      })
+      .join(' ')
+  )
+}

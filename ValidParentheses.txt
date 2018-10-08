@@ -1,0 +1,16 @@
+--- ver1 ---
+function validParentheses(parens){
+  let parensReplaced = parens.replace(/\(\)/, '');
+  if (parensReplaced.match(/\(\)/)) {
+    return validParentheses(parensReplaced)
+  }
+  return parensReplaced.length > 0 ? false : true
+}
+
+
+--- ver2 ---
+function validParentheses(parens){
+  let parensReplaced = parens.replace(/\(\)/g, '');
+  while (parensReplaced.indexOf('()')>=0) return validParentheses(parensReplaced)
+  return parensReplaced.length > 0 ? false : true
+}

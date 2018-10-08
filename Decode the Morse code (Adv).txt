@@ -1,0 +1,74 @@
+--- var1 (wrong) ---
+var decodeBits = function(bits){
+    return bits.replace(/1{6}/g, '-').replace(/0{6}/g, ' ').replace(/1{2}/g, '.').replace(/0{2}/g, '').trim();
+}
+
+var decodeMorse = function(morseCode){
+  return morseCode.split('  ').map(wordArr => wordArr.split(' ').reduce((acc, char) => acc + MORSE_CODE[char] ,'')).join(' ')
+}
+
+
+
+--- var2 ---
+var decodeBits = function(bits){
+  let rate = bits.match(/1{1,}/)[0].length;
+//    return bits.replace(/1{6}/g, '-').replace(/0{6}/g, ' ').replace(/1{2}/g, '.').replace(/0{2}/g, '').trim();
+   return (
+     bits
+       .replace(/^(0*)/, '')
+       .replace(/(0*)$/, '')
+       .replace(new RegExp(`1{${rate*3}}`, 'g'), '-')
+       .replace(new RegExp(`0{${rate*3}}`, 'g'), ' ')
+       .replace(new RegExp(`1{${rate}}`, 'g'), '.')
+       .replace(new RegExp(`0{${rate}}`, 'g'), '')
+       .trim()
+  );
+}
+
+var decodeMorse = function(morseCode){
+    // ToDo: Accept dots, dashes and spaces, return human-readable message
+//     return morseCode.replace('·', MORSE_CODE['·']).replace('?', MORSE_CODE['?']).replace(' ', '');
+//   return (
+//     morseCode
+//       .replace(/(\·{1,})|(\?{1,})|/, (m, val) => MORSE_CODE[val])
+//       .replace(/(\?{1,})/, (m, val) => MORSE_CODE[val])
+//       .replace(/\s{2}/g, '   '));
+  return morseCode.split('  ').map(wordArr => wordArr.split(' ').reduce((acc, char) => acc + MORSE_CODE[char] ,'')).join(' ')
+}
+
+
+
+--------------------------------
+bits = bits.replace(/^(0*)|(0*)$/g, '');
+--------------------------------
+Math.min(...bits.match(/(1{1,})/g).map(val => val.length));
+---------------------------------
+let forRate = bits.match(/(1{1,})(0{1,})?/);
+  let rate = (
+    forRate[2]
+      ? (forRate[1].length / forRate[2].length <= 1)
+        ? forRate[1].length
+        : forRate[1].length / 3
+      : forRate[1].length
+  );
+  console.log('testRate', rate);
+    
+
+
+
+--- var3 (final)---
+var decodeBits = function(bits){
+  bits = bits.replace(/^(0*)|(0*)$/g, '');
+  let rate = Math.min(...bits.match(/(1{1,})|(0{1,})/g).map(val => val.length))
+   return (
+     bits
+       .replace(new RegExp(`1{${rate*3}}`, 'g'), '-')
+       .replace(new RegExp(`0{${rate*3}}`, 'g'), ' ')
+       .replace(new RegExp(`1{${rate}}`, 'g'), '.')
+       .replace(new RegExp(`0{${rate}}`, 'g'), '')
+  );
+}
+
+var decodeMorse = function(morseCode){
+  return morseCode.split('  ').map(wordArr => wordArr.split(' ').reduce((acc, char) => acc + MORSE_CODE[char] ,'')).join(' ')
+}

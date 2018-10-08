@@ -1,0 +1,60 @@
+--- var1 ---
+function sumOfDivided(lst) {
+  let p = {};
+
+  const checkForP = (num) => {
+  	let i=2, j=0;
+  	for (null; i*i<=num && j!==1; i++) {
+  		if (num % i === 0) j = 1
+  	}
+  	return j === 1 ? false : true;
+  };
+
+  const findAllP = (mainNum) => {
+  	let checkedNums = [];
+  	
+		const findP = (num) => {
+	  	if (checkedNums.includes(num)) return
+	  	else {
+  			checkedNums.push(num);
+  			if (checkForP(num)) {
+  				p[num] ? p[num].push(mainNum) : p[num] = [mainNum];
+  				return
+  			}
+	  	};
+	  	for (let i = 2; i <= num; i++) {
+	  		if (Math.floor(num/i) === 1) return
+	  		if (!(num % i)) findP(i)
+	  	}
+	  };
+	  
+	  findP(Math.abs(mainNum))
+	}
+
+  lst.forEach(num => {if (Math.abs(num) !== 1) findAllP(num)});
+  return Object.keys(p).map(pNum => [+pNum, p[pNum].reduce((acc, cur) => acc + cur)])
+}
+
+
+
+--- var2 CodeWars ---
+function sumOfDivided(lst) {
+    if(lst.length == 0) { return []; }
+    var m = Math.max.apply(null, lst.map(Math.abs)),
+        primes = [],
+        marked = Array(m+1);
+
+    for(var i = 2; i <= m; ++i) {
+        if(marked[i]) continue;
+
+        var sum = 0, isMul = false;
+        lst.forEach(function(n) { if(n % i == 0) { sum += n; isMul = true; } });
+        if(isMul) primes.push([i, sum]);
+
+        for(var j = 2*i; j <= m; j += i) {
+            marked[j] = true;
+        }
+    }
+
+    return primes;
+}

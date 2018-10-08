@@ -1,0 +1,63 @@
+--- var1(wrong) ---
+function solution(number){
+  var romsTempl = [ [1000,'M'], [500,'D'], [100,'C'], [50,'L'], [10,'X'], [5,'V'], [1,'I'] ];
+  var roms = '';
+  romsTempl.forEach((pair, ind, arr) => {
+    let nextRom = Math.floor(number/pair[0]);
+      number -= nextRom * pair[0];
+      if (number >= (pair[0] - pair[0]/10)) {
+        roms += pair[1].repeat(nextRom) + arr[ind+2][1] + pair[1];
+        number -= pair[0] - pair[0]/10;
+      }
+      else if (number/pair[0] >= 0.8 && /^4/.test(number)) {
+        roms += arr[ind+1][1] + pair[1];
+        number -= pair[0]/5*4;
+      } else {    
+        roms += pair[1].repeat(nextRom);
+      }
+  })
+  return roms
+
+
+--- var2 ---
+function solution(number){
+  var romsTempl = [ [1000,'M'], [500,'D'], [100,'C'], [50,'L'], [10,'X'], [5,'V'], [1,'I'] ];
+  var roms = '';
+  romsTempl.forEach((pair, ind, arr) => {
+    let nextRom = Math.floor(number/pair[0]);
+      number -= nextRom * pair[0];
+      if (number >= (pair[0] - pair[0]/10) && /^9/.test(pair[0] - pair[0]/10)) {
+        roms += pair[1].repeat(nextRom) + arr[ind+2][1] + pair[1];
+        number -= pair[0] - pair[0]/10;
+      }
+      else if (number/pair[0] >= 0.8 && /^4/.test(number)) {
+        roms += arr[ind+1][1] + pair[1];
+        number -= pair[0]/5*4;
+      } else {    
+        roms += pair[1].repeat(nextRom);
+      }
+  })
+  return roms
+}
+
+
+--- var3 ---
+function solution(number){
+  const romNumMap = [ [1000,'M'], [500,'D'], [100,'C'], [50,'L'], [10,'X'], [5,'V'], [1,'I'] ];
+  var newRomNum = '';
+  romNumMap.forEach((cur, i, arr) => {
+    let nextRom = Math.floor(number/cur[0]);
+      number -= nextRom * cur[0];
+      if (number >= cur[0]*0.9 && /^9/.test(cur[0]*0.9)) {
+        newRomNum += cur[1].repeat(nextRom) + arr[i+2][1] + cur[1];
+        number -= cur[0]*0.9;
+      }
+      else if (number/cur[0] >= 0.8 && /^4/.test(number)) {
+        newRomNum += arr[i+1][1] + cur[1];
+        number -= cur[0]*0.8;
+      } else {    
+        newRomNum += cur[1].repeat(nextRom);
+      }
+  })
+  return newRomNum
+}

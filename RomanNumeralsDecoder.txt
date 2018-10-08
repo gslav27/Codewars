@@ -1,0 +1,8 @@
+function solution(roman){
+  const romanTemp = {I:1,V:5,X:10,L:50,C:100,D:500,M:1000};
+  let decInt = 0;
+  roman.split('').forEach((num, i, arr) => {
+    decInt += (arr[i+1] && romanTemp[num] < romanTemp[arr[i+1]]) ? -romanTemp[num] : romanTemp[num]
+  })
+  return decInt
+}

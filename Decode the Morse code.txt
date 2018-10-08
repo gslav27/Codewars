@@ -1,0 +1,10 @@
+--- var1 ---
+decodeMorse = function(morseCode){
+  return morseCode.trim().split('   ').map(val => val.split(' ').map(val => MORSE_CODE[val]).join('')).join(' ')
+}
+
+
+--- var2 ---
+decodeMorse = function(morseCode){
+  return morseCode.trim().split('   ').map(val => val.split(' ').reduce((acc,val) => acc + MORSE_CODE[val], '')).join(' ')
+}

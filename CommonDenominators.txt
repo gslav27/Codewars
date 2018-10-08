@@ -1,0 +1,5 @@
+function convertFrac(lst){
+  let den = 1;
+  while (lst.filter(val => den % val[1]).length) den++
+  return lst.map(val => `(${den * val[0] / val[1]},${den})`).join('')
+}

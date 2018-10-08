@@ -1,0 +1,12 @@
+function productFib(prod){
+  let fibArr = [0, 1];
+  const fNum = (n) => fibArr[fibArr.length-n] 
+  do 
+    fibArr.push(fNum(2) + fNum(1)) 
+  while (fNum(2) * fNum(1) < prod);
+  return [
+    fNum(2),
+    fNum(1),
+    fNum(2) * fNum(1) === prod
+  ]
+}
