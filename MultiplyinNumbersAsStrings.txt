@@ -1,0 +1,30 @@
+function multiply(a, b) {
+  let strLengthDiff,
+      resultStr = '',
+      memoryNum = 0; 
+
+  if (!+a || !+b) return '0';
+  // prepare strings for correct FOR looping
+  if (/^0+/.test(a)) a = a.replace(/^0+/, '');
+  if (/^0+/.test(b)) b = b.replace(/^0+/, '');
+  if (a.length !== b.length) {
+    let maxLength = Math.max(a.length, b.length);
+    strLengthDiff = Math.min(a.length, b.length) - maxLength;
+    a = a.padEnd(maxLength, '0');
+    b = b.padEnd(maxLength, '0');
+  }
+
+  for (let q = b.length - 1; q >= 0; --q) {
+    for (let j = (q === b.length - 1) ? (a.length - 1) : 0; j >= 0; --j) {
+      memoryNum += b[q] * a[j];
+      for (let i = q - 1; i >= j; --i) {
+        memoryNum += b[i] * a[j + q - i]
+      }
+      resultStr = `${memoryNum}`.slice(-1) + resultStr;
+      memoryNum = Math.floor(memoryNum/10);
+    }
+  }
+  
+  if (memoryNum) resultStr = `${memoryNum}` + resultStr;
+  return resultStr.slice(0, strLengthDiff);
+}

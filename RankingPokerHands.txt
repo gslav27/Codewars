@@ -1,0 +1,126 @@
+--- var1 ---
+var Result = { "win": 1, "loss": 2, "tie": 3 }
+
+function PokerHand(hand) {
+	this.hand = hand;
+}
+
+// hand combinations from low to top
+const combinations = [
+	'hightcard','pair','twoPairs','threeOfKind','straight',
+	'flush','fullHouse','fourOfKind','straightFlush','royalFlush'
+];
+// card values from low to top
+const cardValues = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+// card suits
+const cardSuits = ['S', 'H', 'D', 'C'];
+
+const findCombination = (cardHand) => {
+  let hightCardInds;
+
+	const suitsGrouped = cardHand
+		// take only card suits and sort thems 
+		.match(/.\b/gi).sort().join('')
+		// group by card suits and sort by cards qty (higher first)
+		.match(new RegExp(`${cardSuits.join('+|')}+`, 'gi'))
+		.sort((a, b) => b.length - a.length);
+
+	const valuesGrouped = cardHand
+		// take only card values and sort them
+		.match(/\b./gi).sort((a,b) => cardValues.indexOf(b) - cardValues.indexOf(a)).join('')
+		// group by card values and sort by cards qty (higher first)
+		.match(new RegExp(`${cardValues.join('+|')}+`, 'gi'))
+		.sort((a, b) => b.length - a.length);
+
+	const valuesSorted = cardHand
+		.split(' ')
+		.map(card => cardValues.indexOf(card[0]))
+		.sort((a,b) => a-b);
+
+	// check if it's royalFlush || straightFlush || flush
+	if (suitsGrouped.length === 1) {
+		// it's royalFlush
+		if (valuesSorted[0] === 8) return [combinations.indexOf('royalFlush')];
+		// it's straightFlush
+		if (valuesSorted[4]-valuesSorted[0] === 4) return [combinations.indexOf('straightFlush'), valuesSorted[4]];
+		// it's flush
+		return [combinations.indexOf('flush'), ...valuesSorted.reverse()];
+	}
+
+	// check other combinations
+	for (let i = 0; i<valuesGrouped.length; i++) {
+		let matched = valuesGrouped[i];
+		//check if it's fourOfKind
+		if (matched.length === 4) { 
+      return [
+      	combinations.indexOf('fourOfKind'),
+      	cardValues.indexOf(matched[0]),
+      	cardValues.indexOf(valuesGrouped[i+1])
+      ];
+		} 
+		//check if it's fullHouse || threeOfKind
+		else if (matched.length === 3) {
+			if (valuesGrouped[i+1].length === 2) {
+				// it's fullHouse
+				return [
+					combinations.indexOf('fullHouse'),
+					cardValues.indexOf(matched[0]),
+					cardValues.indexOf(valuesGrouped[i+1][0])
+				];
+			} else {
+				// it's threeOfKind
+        return [
+        	combinations.indexOf('threeOfKind'),
+        	cardValues.indexOf(matched[0]),
+					// ...valuesGrouped.slice(1).reverse().map(val=>cardValues.indexOf(val))
+					cardValues.indexOf(valuesGrouped[i+1]),
+					cardValues.indexOf(valuesGrouped[i+2])
+				];
+			}
+		}
+		//check if it's twoPairs || pair
+		else if (matched.length === 2) { 
+			if (valuesGrouped.length === 3) {
+				// it's twoPairs
+				return [
+					combinations.indexOf('twoPairs'),
+					cardValues.indexOf(matched[0]),
+					cardValues.indexOf(valuesGrouped[1][0]),
+					cardValues.indexOf(valuesGrouped[2])
+				];
+			} else {
+				// it's pair
+        return [
+        	combinations.indexOf('pair'),
+        	cardValues.indexOf(matched[0]),
+        	...valuesGrouped.slice(1).map(val=>cardValues.indexOf(val))
+        ];
+			}
+		}
+		// check if it's Straight
+		else if (valuesSorted[4]-valuesSorted[0] === 4) {
+			return [
+				combinations.indexOf('straight'),
+				valuesSorted[4]
+			];
+		}
+		// it's hightcard
+		else {
+      hightCardInds
+      	? hightCardInds.push(valuesSorted[5 - hightCardInds.length])
+      	: hightCardInds  = [combinations.indexOf('hightcard'), valuesSorted[4]];
+		}
+	}
+  return hightCardInds;
+}
+
+PokerHand.prototype.compareWith = function(hand) {
+	let thisHand = findCombination(this.hand);
+	let comparedHand = findCombination(hand.hand);
+	for (let i = 0; i < thisHand.length; i++) {
+		if (thisHand[i] == comparedHand[i]) continue;
+		if (thisHand[i] > comparedHand[i]) return Result.win;
+		if (thisHand[i] < comparedHand[i]) return Result.loss;
+	}
+  return Result.tie;
+}
