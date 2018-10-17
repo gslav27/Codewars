@@ -1,0 +1,52 @@
+--- var1 ---
+const theLift = (queues, capacity) => {
+  const pitStops = [0];
+  let currentQty = 0;
+  let currentLiftQueue = [];
+  let currentFloor = 0;
+  let direction = 1;
+
+  const updateCurrentLiftQueue = (floor) => {
+    if (floor || floor === 0) currentLiftQueue.push(floor);
+    if (currentLiftQueue) {
+      currentLiftQueue = currentLiftQueue.sort((a, b) => (direction ? a - b : b - a));
+    }
+  };
+
+  const disembarking = () => {
+    while (currentLiftQueue[0] === currentFloor) {
+      currentQty--;
+      currentLiftQueue.shift();
+      // updateCurrentLiftQueue();
+    }
+  };
+
+  const boarding = (i) => {
+    currentQty++;
+    updateCurrentLiftQueue(queues[currentFloor][i]);
+    queues[currentFloor].splice(i, 1);
+  };
+
+  for (currentFloor; queues.join('') || currentLiftQueue.join(''); direction ? currentFloor++ : currentFloor--) {
+    if (currentFloor === 0) { direction = 1; } else if (currentFloor === queues.length - 1) { direction = 0; }
+    if (currentLiftQueue[0] === currentFloor || (
+      queues[currentFloor].length &&
+      queues[currentFloor].filter(query => (direction ? query > currentFloor : query < currentFloor)).length
+    )) {
+      if (!(pitStops.slice(-1)[0] === currentFloor)) pitStops.push(currentFloor);
+      if (currentLiftQueue[0] === currentFloor) disembarking();
+      if (queues[currentFloor].length && (currentQty < capacity)) {
+        for (let i = 0; i < queues[currentFloor].length && currentQty < capacity; i++) {
+          if ((direction && (queues[currentFloor][i] > currentFloor)) ||
+            (!direction && (queues[currentFloor][i] < currentFloor))
+          ) {
+            boarding(i);
+            i--;
+          }
+        }
+      }
+    }
+  }
+  if (pitStops.slice(-1)[0]) pitStops.push(0);
+  return pitStops;
+};

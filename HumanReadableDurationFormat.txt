@@ -1,0 +1,48 @@
+--- var1 ---
+function formatDuration(seconds) {
+  if (!seconds) return 'now';
+  
+  const timeGrouped = [];
+  const TimeParams = {
+    second: 1,
+    get minute() { return this.second * 60; },
+    get hour() { return this.minute * 60; },
+    get day() { return this.hour * 24; },
+    get year() { return this.day * 365; },
+  };
+
+  const TimeTypes = Object.keys(TimeParams).reverse();
+  TimeTypes.forEach((key) => {
+    const Qty = Math.floor(seconds / TimeParams[key]);
+    timeGrouped.push(Qty);
+    if (Qty) {
+      seconds -= Qty * TimeParams[key];
+    }
+  });
+
+  return timeGrouped.reduce((acc, qty, ind) => {
+    if (qty) {
+      return `${acc ? `${acc}, ` : ''}${qty} ${TimeTypes[ind]}${qty > 1 ? 's' : ''}`;
+    }
+    return acc;
+  }, '').replace(/,([^,]*)$/g, ' and$1');
+}
+
+
+
+--- var2 ---
+function formatDuration(seconds) {
+  if (!seconds) return 'now';
+
+  const TimeParamsMap = new Map([['year', 3600 * 24 * 365], ['day', 3600 * 24], ['hour', 3600], ['minute', 60], ['second', 1]]);
+  let str = '';
+  for (const group of TimeParamsMap) {
+    const Qty = Math.floor(seconds / group[1]);
+    if (Qty) {
+      seconds -= Qty * group[1];
+      str += `${Qty} ${group[0]}${Qty > 1 ? 's' : ''}${seconds ? ', ' : ''}`;
+    }
+  }
+
+  return str.replace(/,([^,]*)$/g, ` and${'$1'}`);
+}
